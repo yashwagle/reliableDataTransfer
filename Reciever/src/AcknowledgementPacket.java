@@ -1,5 +1,32 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+/**
+ * Acknowledges the data packet sends acknowledgements from receiver to sender
+ *contains the cumulative acknowledgements as well as the extended positive acknowledgements
+ * */
+
+/**
+ * Format
+ *  [0........7] 1 Byte
+ * [SYN Flag, FIN Flag, ....] (1 byte)
+ * [Cumulative Acknowledgement] (4 bytes)
+ * [Cumulative Acknowledgement]
+ * [Cumulative Acknowledgement]
+ * [Cumulative Acknowledgement]
+ * [Positive Extended Ack Length] (4 bytes)
+ * [Positive Extended Ack Length]
+ * [Positive Extended Ack Length]
+ * [Positive Extended Ack Length]
+ * [Source IP] (4 bytes)
+ * [Source IP]
+ * [Source IP]
+ * [Source IP]
+ * [Destination IP] (4 bytes)
+ * [Destination IP]
+ * [Destination IP]
+ * [Destination IP]
+ * [Positive Extended Acknowledgements]
+ * */
 
 public class AcknowledgementPacket implements Serializable {
 
@@ -147,7 +174,6 @@ public class AcknowledgementPacket implements Serializable {
     }
 
     public void unmarshall(){
-        //Todo
         FIN = (marshalledData[0] & 0x01) != 0;
         byte b = (byte) (marshalledData[0]>>1);
         SYN = (b & 0x01) != 0;

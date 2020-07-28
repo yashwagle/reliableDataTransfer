@@ -4,12 +4,14 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class AcknowledgementSender {
-
-    String senderhost;
+    /**
+     * Sends acknowledgement packets to the sender
+     * on the given port
+     *
+     * */
     int port;
     String sourceIP,destinationIP;
-    public AcknowledgementSender(String host, int port, String sourceIP, String destinationIP){
-        this.senderhost = host;
+    public AcknowledgementSender( int port, String sourceIP, String destinationIP){
         this.port = port;
         this.sourceIP = sourceIP;
         this.destinationIP =destinationIP;
@@ -26,7 +28,7 @@ public class AcknowledgementSender {
         byte data[] = ackPacket.marshall();
         //Sending the data
         DatagramSocket datagramSocket = new DatagramSocket();
-        InetAddress IP = InetAddress.getByName(senderhost);
+        InetAddress IP = InetAddress.getByName(destinationIP);
         DatagramPacket datagramPacket = new DatagramPacket(data,data.length,IP,port);
         datagramSocket.send(datagramPacket);
        // packetSenderObjectStream.close();

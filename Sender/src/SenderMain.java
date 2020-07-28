@@ -1,28 +1,48 @@
 import java.io.FileNotFoundException;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class SenderMain {
 
+    public static String getSenderIP(){
+        InetAddress ip = null;
+        try {
+            ip = InetAddress.getLocalHost();
 
+        }catch (UnknownHostException ue){
+            System.out.println(ue);
+        }
+        return ip.getHostAddress();
+    }
 
 
     public static void main(String[] args) {
-        String IP=args[0];
-        int Sendingport= Integer.parseInt(args[2]);
-        int recievingPort = Integer.parseInt(args[1]);
-        String sourceIP="127.0.0.1",destinationIP="127.0.0.1";
-        String Filepath=args[3];
+        int port= Integer.parseInt(args[0]);
+        String sourceIP=getSenderIP();
+        String destinationIP=args[1];
+        String Filepath=args[2];
         int dataByteLength=20000;
         int maxUnSentData= 30;
         int initialSequenceNumber = 200;
         int maxUnackedPacket = 10;
         int windowSize = 20;
-        DataSender ds = new DataSender(IP,Sendingport);
+        DataSender ds = null;
+        setUpConnection st = null;
+        int sendingPort;
+        if(args.length>3) {
+            sendingPort = Integer.parseInt(args[3]);
+            ds = new DataSender(destinationIP, sendingPort);
+        }
+        else{
+            ds = new DataSender(destinationIP, port);
+
+        }
         try {
-            setUpConnection st = new setUpConnection(ds,initialSequenceNumber,recievingPort,sourceIP,destinationIP);
+            st = new setUpConnection(ds,initialSequenceNumber,port,sourceIP,destinationIP, Filepath);
             st.start();
             st.join();
-        } catch (SocketException | InterruptedException e) {
+        } catch (InterruptedException | SocketException e) {
             e.printStackTrace();
         }
         /////////////////////////
@@ -32,7 +52,7 @@ public class SenderMain {
         sr.setLastCumalativeAck(initialSequenceNumber);
         AcknowledgementHandler ackHandler=null;
         try {
-             ackHandler = new AcknowledgementHandler(recievingPort);
+             ackHandler = new AcknowledgementHandler(port);
         } catch (SocketException e) {
             System.out.println("Error while start ackHandler Thread");
             e.printStackTrace();

@@ -1,6 +1,35 @@
 import java.io.Serializable;
 
 public class DataPacket implements Serializable {
+
+
+    /**
+     * Data packet that transfers data from sender to receiver
+     * */
+
+    /**
+     * Format
+     * [0........7] 1 Byte
+     * [SYN Flag, FIN Flag, ....] (1 byte)
+     * [Sequence Number] (4 bytes)
+     * [Sequence Number]
+     * [Sequence Number]
+     * [Sequence Number]
+     * [Data length in bytes] (4 bytes)
+     * [Data length]
+     * [Data length]
+     * [Data length]
+     * [Source IP] (4 bytes)
+     * [Source IP]
+     * [Source IP]
+     * [Source IP]
+     * [Destination IP] (4 bytes)
+     * [Destination IP]
+     * [Destination IP]
+     * [Destination IP]
+     * [data length number of bytes]
+     * */
+
     private byte[] data;
     private int  sequenceNumber;
     private byte[] marshalledData;
@@ -58,6 +87,7 @@ public class DataPacket implements Serializable {
 
     public void setData(byte[] data) {
         this.data = data;
+        this.dataLength = data.length;
     }
 
     public int getSequenceNumber() {
@@ -146,12 +176,11 @@ public class DataPacket implements Serializable {
         marshalledData[14] = destinationIPByte[1];
         marshalledData[15] = destinationIPByte[2];
         marshalledData[16] = destinationIPByte[3];
-        if(SYN==false) {
-            int j = 0;
+        int j = 0;
             for (int i = 17; i < dataLength + 17; i++) {
                 marshalledData[i] = data[j++];
             }
-        }
+
         return marshalledData;
 
     }

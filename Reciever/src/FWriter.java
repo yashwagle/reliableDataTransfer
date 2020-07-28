@@ -1,11 +1,19 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-
+/**
+ * File writer class that will write the data from
+ * a given data packet to the file
+ *
+ *
+ * */
 public class FWriter {
     String filename;
     FileOutputStream fileOutputStream;
-
+    /**
+     * Initialize with the filename specified in the SYN packet
+     *
+     * */
     public FWriter(String filename) throws FileNotFoundException {
         this.filename = filename;
         setFileStream();

@@ -4,6 +4,13 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class AcknowledgementHandler extends Thread {
+
+    /**
+     * Listener for the acknowledgement packet until the FIN flag is false
+     *
+     *
+     * */
+
     int port;
     DatagramSocket socket;
     SharedResource sr;

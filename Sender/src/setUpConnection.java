@@ -11,17 +11,22 @@ public class setUpConnection extends Thread{
     Timer timout;
     DatagramSocket datagramSocket;
     String sourceIP,destinationIP;
-    setUpConnection(DataSender ds, int sequenceNumber, int port, String sourceIP, String destinationIP) throws SocketException {
+    String filePath;
+
+    setUpConnection(DataSender ds, int sequenceNumber, int port, String sourceIP, String destinationIP, String filePath) throws SocketException {
         this.ds = ds;
         this.sequenceNumber = sequenceNumber;
         datagramSocket = new DatagramSocket(port);
         this.sourceIP = sourceIP;
         this.destinationIP = destinationIP;
+        this.filePath = filePath;
     }
 
     public void sendSYN() throws IOException {
         DataPacket dp = new DataPacket(sequenceNumber,sourceIP,destinationIP);
         dp.setSYN(true);
+        dp.setData(filePath.getBytes());
+        System.out.println(dp.sourceIP);
         try {
             ds.send(dp);
         } catch (IOException e) {

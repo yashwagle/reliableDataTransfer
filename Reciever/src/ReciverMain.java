@@ -1,30 +1,35 @@
-import java.io.FileNotFoundException;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class ReciverMain {
-    public static void main(String[] args) {
-        String IPAddress=args[0];
-        int Recievingport=Integer.parseInt(args[1]);
-        int Sendingport=Integer.parseInt(args[2]);
-        String sourceIP="127.0.0.1";
-        String destinationIP="127.0.0.1";
-        String filepath=args[3];
-        AcknowledgementSender ackSender = new AcknowledgementSender(IPAddress,Sendingport,"127.0.0.1","127.0.0.1");
-        FWriter fWriter = null;
+
+
+    public static String getSenderIP(){
+        InetAddress ip = null;
         try {
-            fWriter = new FWriter(filepath);
-        } catch (FileNotFoundException e) {
-            System.out.println("Error in creating file");
-            e.printStackTrace();
+            ip = InetAddress.getLocalHost();
+
+        }catch (UnknownHostException ue){
+            System.out.println(ue);
         }
+        return ip.getHostAddress();
+    }
+    public static void main(String[] args) {
+        String IPAddress=getSenderIP();
+        int sourcePort=Integer.parseInt(args[0]);
         RecieverSharedResource rs = RecieverSharedResource.getInstance();
-        rs.setSourceIP(sourceIP);
-        rs.setDestinationIP(destinationIP);
-        rs.setAckSender(ackSender);
-        rs.setfWriter(fWriter);
+        rs.setSourceIP(IPAddress);
         try {
-            RecieveData rsData = new RecieveData(Recievingport);
-            rsData.start();
+            if(args.length>1){
+                int destinationPort = Integer.parseInt(args[1]);
+                RecieveData rsData = new RecieveData(IPAddress, sourcePort, destinationPort);
+                rsData.start();
+            }
+            else {
+                RecieveData rsData = new RecieveData(IPAddress, sourcePort);
+                rsData.start();
+            }
         } catch (SocketException e) {
             System.out.println("Error while setting up port");
             e.printStackTrace();

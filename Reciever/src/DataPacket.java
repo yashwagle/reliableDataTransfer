@@ -1,6 +1,34 @@
 import java.io.Serializable;
 
 public class DataPacket implements Serializable {
+
+
+    /**
+     * Data packet that transfers data from sender to receiver
+     * */
+
+    /**
+     * Format
+     * [0........7] 1 Byte
+     * [SYN Flag, FIN Flag, ....] (1 byte)
+     * [Sequence Number] (4 bytes)
+     * [Sequence Number]
+     * [Sequence Number]
+     * [Sequence Number]
+     * [Data length in bytes] (4 bytes)
+     * [Data length]
+     * [Data length]
+     * [Data length]
+     * [Source IP] (4 bytes)
+     * [Source IP]
+     * [Source IP]
+     * [Source IP]
+     * [Destination IP] (4 bytes)
+     * [Destination IP]
+     * [Destination IP]
+     * [Destination IP]
+     * [data length number of bytes]
+     * */
     private byte[] data;
     private int  sequenceNumber;
     private byte[] marshalledData;
@@ -108,7 +136,7 @@ public class DataPacket implements Serializable {
     public byte[] IPAddressToByte(String IP){
         String[] arr = IP.split("\\.");
         byte[] IPAddressBytes = new byte[4];
-        System.out.println(arr[0]+" "+arr[1]+" "+arr[2]+" "+arr[3]);
+        //System.out.println(arr[0]+" "+arr[1]+" "+arr[2]+" "+arr[3]);
         IPAddressBytes[0] = (byte) ((byte) Integer.parseInt(arr[0]) & 0xFF);
         IPAddressBytes[1] = (byte) ((byte) Integer.parseInt(arr[1]) & 0xFF);
         IPAddressBytes[2] = (byte) ((byte) Integer.parseInt(arr[2]) & 0xFF);
@@ -152,12 +180,12 @@ public class DataPacket implements Serializable {
         marshalledData[14] = destinationIPByte[1];
         marshalledData[15] = destinationIPByte[2];
         marshalledData[16] = destinationIPByte[3];
-        if(SYN==false) {
+
             int j = 0;
             for (int i = 17; i < dataLength + 17; i++) {
                 marshalledData[i] = data[j++];
             }
-        }
+
         return marshalledData;
 
     }
@@ -178,10 +206,11 @@ public class DataPacket implements Serializable {
         sequenceNumber=convertByteToInt(temparr);
         copy(marshalledData,temparr,5);
         dataLength = convertByteToInt(temparr);
-        copy(marshalledData,temparr,8);
+        copy(marshalledData,temparr,9);
         sourceIP = byteIPAddressToString(temparr);
         copy(marshalledData,temparr,13);
         destinationIP = byteIPAddressToString(temparr);
+
         if(dataLength!=-1) {
             data = new byte[dataLength];
             copy(marshalledData, data, 17);

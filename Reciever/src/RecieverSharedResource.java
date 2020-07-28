@@ -4,7 +4,16 @@ import java.util.Timer;
 import java.util.TreeMap;
 
 public class RecieverSharedResource {
-
+    /**
+     *Shared Resource Singleton Class
+     *A treemap to store the received packets with their sequence number as the key
+     * Once all packets upto a particular sequence number have been received
+     * they are written to the file and the cumulative acknowledgement is sent to the
+     * sender.
+     * A packet received out of order will have the extended positive acknowledgements
+     * stored and an acknowledgement with the cumulative positive acknowledgements and extended acknowledgement
+     * will be sent to the sender
+     * */
     TreeMap<Integer,DataPacket> recievedPackets = new TreeMap<>();
     AcknowledgementSender ackSender;
     static RecieverSharedResource rs = new RecieverSharedResource();
@@ -13,7 +22,7 @@ public class RecieverSharedResource {
     int sequenceAcked;
     int lastPrinted;
     String sourceIP;
-    String destinationIP;
+    String destinationIP = null;
 
     public String getSourceIP() {
         return sourceIP;

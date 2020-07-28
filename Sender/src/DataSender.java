@@ -5,6 +5,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 public class DataSender {
+    /**
+     * Sends the given data packet to the given port and host
+     *
+     *
+     * */
     String host;
     int port;
     DatagramSocket datagramSocket;
